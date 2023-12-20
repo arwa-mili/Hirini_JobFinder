@@ -5,6 +5,7 @@ import {
   getCompanyById,
   getCompanyJobListing,
   getCompanyProfile,
+  verifyOTP,
   register,
   signIn,
   updateCompanyProfile,
@@ -23,6 +24,7 @@ const limiter = rateLimit({
 
 // REGISTER
 router.post("/register", limiter, register);
+router.post("/verifyOTP",verifyOTP);
 
 // LOGIN
 router.post("/login", limiter, signIn);

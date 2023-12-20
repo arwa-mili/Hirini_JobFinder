@@ -1,7 +1,76 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { createChat, findChat } from '../utils/chatRequests';
 
-const CompanyCard = ({ cmp }) => {
+const CompanyCard = ({ cmp }) =>
+{
+  const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
+  console.log(user._id)
+  console.log(cmp._id)
+  const handleChatClick = async () =>
+  {
+    /* try
+     {
+ 
+ 
+       const existingChat = await findChat(cmp._id, user._id);
+ 
+       if (!existingChat)
+       {
+         console.log("created")
+         const newchat = await createChat({ companyId: cmp._id, userId: user._id });
+         console.log
+         navigate(`/chat`);
+       }
+       else
+       {
+         window.location.href = `/chat`;
+       }
+ 
+ 
+ 
+     } catch (error)
+     {
+       console.error('Error creating or finding chat:', error);
+     }*/
+
+    try
+    {
+      try
+      {
+        const response = await findChat(cmp._id, user._id);
+        // Rest of the code remains the same
+        // ...
+      } catch (error)
+      {
+        if (error.response && error.response.status === 404)
+        {
+          // Handle 404 case, e.g., create a new chat
+          console.log("Chat not found, creating a new chat...");
+          const newChat = await createChat({ senderId: user._id, receiverId: cmp._id });
+          console.log("New chat created", newChat);
+          // Add 'await' here
+        } else
+        {
+          console.error('Error creating or finding chat:', error);
+
+        }
+      }
+    } catch (error)
+    {
+      console.error('Error in handleChatClick:', error);
+    }
+
+    navigate(`/chat`);
+
+
+
+
+  }
+
+
   return (
     <div className='w-full h-16 flex gap-4 items-center justify-between bg-white shadow-md rounded'>
       <div className='w-3/4 md:w-2/4 flex gap-4 items-center'>
@@ -32,8 +101,12 @@ const CompanyCard = ({ cmp }) => {
         <span className='text-xs md:base font-normal text-gray-600'>
           Jobs Posted
         </span>
+
+
+        <button onClick={handleChatClick}> Start Chat</button>
       </div>
     </div>
+
   );
 };
 

@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 import Jobs from "../models/jobsModel.js";
 import Companies from "../models/companiesModel.js";
+import multer from 'multer';
+import path from 'path';
+import ApplicationsModel from "../models/applicationsModel.js";
+
+
+
+
 
 export const createJob = async (req, res, next) =>
 {
@@ -217,6 +224,95 @@ export const getJobPosts = async (req, res, next) =>
     res.status(404).json({ message: error.message });
   }
 };
+
+export const applyNow = async (req, res, next) =>
+{
+  try
+  {
+    const { id } = req.params;
+    const { coverLetter, name, surname, email } = req.body;
+
+    if (!coverLetter || !req.file)
+    {
+      return res.status(400).json({ message: "Please provide cover letter and CV" });
+    }
+
+    const applicationData = {
+      coverLetter,
+      pdf: req.file.filename,
+      candidateName: name,
+      candidateSurname: surname,
+      email,
+    };
+
+    const application = new ApplicationsModel(applicationData);
+    await application.save();
+
+    const job = await Jobs.findById({ _id: id }).populate({
+      path: "company",
+      select: "-password",
+    });
+
+    if (!job)
+    {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    job.applicants.push(application._id);
+    await job.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Application submitted successfully",
+      application,
+    });
+  } catch (error)
+  {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getJobsByCompanyId = async (req, res, next) =>
+{
+  try
+  {
+    const { _id } = req.params;
+
+    console.log("Company ID:", _id);
+
+    const jobs = await Jobs.find({ company: _id }).populate({
+      path: "applicants",
+      select: "-password",
+    });
+
+    // Filter jobs with non-empty applicants list
+    const jobsWithApplicants = jobs.filter((job) => job.applicants.length > 0);
+
+    // Transform jobs data to the desired response format
+    const transformedJobs = jobsWithApplicants.map((job) => ({
+      jobTitle: job.jobTitle,
+      applicants: job.applicants.map((applicant) => ({
+        candidateName: applicant.candidateName,
+        candidateSurname: applicant.candidateSurname,
+        email: applicant.email,
+        coverLetter: applicant.coverLetter,
+        cv: applicant.pdf,
+        AppStatus: applicant.status,
+      })),
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: transformedJobs,
+    });
+  } catch (error)
+  {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 export const getJobById = async (req, res, next) =>
 {

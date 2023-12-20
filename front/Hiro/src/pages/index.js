@@ -8,7 +8,7 @@ import About from "./About";
 import JobDetail from "./JobDetail";
 import CvMatch from "./CvMatch";
 import Chat from "./Chat";
-
+import Applicants from "./Applicants";
 export
 {
   FindJobs,
@@ -17,6 +17,7 @@ export
   UserProfile,
   CompanyProfile,
   UploadJob,
+  Applicants,
   About,
   Chat,
   JobDetail,

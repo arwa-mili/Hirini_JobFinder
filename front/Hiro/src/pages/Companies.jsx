@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CompanyCard, CustomButton, Header, ListBox, Loading } from "../components";
 import { apiRequest } from "../utils";
 import { updateURL } from "../utils";
-
+import { useSelector } from 'react-redux';
 
 const Companies = () =>
 {

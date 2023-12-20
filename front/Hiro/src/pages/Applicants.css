@@ -1,0 +1,41 @@
+.container {
+    max-width: 500px;
+    margin: 20 auto;
+}
+.job-applications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+.job-card {
+    border: 1px solid #f66565;
+    border-radius: 8px;
+    margin: 20px 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    width: 100%;
+}
+
+.job-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.applicant-list {
+    list-style: none;
+    padding: 0;
+}
+
+.applicant-item {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #c85fef;
+    border-radius: 4px;
+}
+
+.applicant-details {
+    margin-top: 8px;
+    font-size: 14px;
+}

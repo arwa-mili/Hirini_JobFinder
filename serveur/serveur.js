@@ -10,7 +10,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import dbConnection from "./dbConfig/dbConnection.js";
 import router from "./routes/index.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
-
+import path from "path";
 dotenv.config();
 
 const app = express();
@@ -29,6 +29,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/files", express.static("files"));
+
 app.use(morgan("dev"));
 
 app.use(router);
@@ -36,6 +38,7 @@ app.use(router);
 //error middleware
 app.use(errorMiddleware);
 
-app.listen(PORT, () => {
+app.listen(PORT, () =>
+{
   console.log(`Dev Server running on port: ${PORT}`);
 });

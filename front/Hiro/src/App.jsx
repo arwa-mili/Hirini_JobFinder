@@ -2,13 +2,14 @@ import { Outlet, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { store } from "./redux/store";
 import { Footer, Navbar } from "./components";
-import
+import 
 {
   About,
   AuthPage,
   Companies,
   CvMatch,
   Chat,
+  Applicants,
   CompanyProfile,
   FindJobs,
   JobDetail,
@@ -63,6 +64,7 @@ function App()
 
           <Route path={"/company-profile"} element={<CompanyProfile />} />
           <Route path={"/company-profile/:id"} element={<CompanyProfile />} />
+          <Route path={"/applicants"} element={<Applicants />} />
           <Route path={"/upload-job"} element={<UploadJob />} />
           <Route path={"/job-detail/:id"} element={<JobDetail />} />
         </Route>

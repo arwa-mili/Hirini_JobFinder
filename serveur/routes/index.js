@@ -5,7 +5,7 @@ import userRoute from "./userRoutes.js";
 import companyRoute from "./companiesRoutes.js";
 import jobRoute from "./jobsRoutes.js";
 import MessageRoute from "./messageRoute.js";
-//import cvAnalyserRoute from "./cvanalyserRoute.js"
+
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.use(`${path}auth`, authRoute); //api-v1/auth/
 router.use(`${path}users`, userRoute);
 router.use(`${path}companies`, companyRoute);
 router.use(`${path}jobs`, jobRoute);
-//router.use(`${path}cv`, cvAnalyserRoute)
+
 router.use(`${path}chat`, chatRoute)
 router.use(`${path}message`, MessageRoute)
 

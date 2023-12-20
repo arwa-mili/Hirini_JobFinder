@@ -11,7 +11,8 @@ import { CustomButton, JobCard, Loading, TextInput } from "../components";
 import { handleFileUpload } from "../utils";
 import { apiRequest } from "../utils";
 import { Login } from "../redux/userSlice";
-const CompnayForm = ({ open, setOpen }) => {
+const CompnayForm = ({ open, setOpen }) =>
+{
   const { user } = useSelector((state) => state.user);
   const {
     register,
@@ -28,46 +29,53 @@ const CompnayForm = ({ open, setOpen }) => {
   const [profileImage, setProfileImage] = useState("");
   const [uploadCv, setUploadCv] = useState("");
   //back
-  const[isLoading,setIsLoading] = useState(false);
-  const [errMsg,setErrMsg] = useState({status:false})
+  const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState({ status: false })
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data) =>
+  {
     setIsLoading(true);
     setErrMsg(null);
 
-    const uri=profileImage && (await handleFileUpload(profileImage));
-    const newData = uri ? { ...data,profileUrl:uri} : data;
+    const uri = profileImage && (await handleFileUpload(profileImage));
+    const newData = uri ? { ...data, profileUrl: uri } : data;
 
 
-    try{
+    try
+    {
 
       const res = await apiRequest({
         url: "/companies/update-company",
         token: user?.token,
         data: newData,
-        method : "PUT",
+        method: "PUT",
       });
       setIsLoading(false);
-      if (res.status === "failed"){
+      if (res.status === "failed")
+      {
 
-        setErrMsg({...res});
-      } else{
-        setErrMsg({ stats:"success",message: res.message});
-          const newData ={ token: res?.token, ...res?.user };
+        setErrMsg({ ...res });
+      } else
+      {
+        setErrMsg({ stats: "success", message: res.message });
+        const newData = { token: res?.token, ...res?.user };
         dispatch(Login(newData));
-        localStorage.setItem("userInfo",JSON.stringify(data));
-        setTimeout(() => {
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setTimeout(() =>
+        {
           window.location.reload();
-        },1500);}
-      } catch (error){
-        console.log(error);
-        setIsLoading(false);
+        }, 1500);
       }
+    } catch (error)
+    {
+      console.log(error);
+      setIsLoading(false);
+    }
 
-    
-    
+
+
   };
- 
+
 
   const closeModal = () => setOpen(false);
 
@@ -197,7 +205,8 @@ const CompnayForm = ({ open, setOpen }) => {
   );
 };
 
-const CompanyProfile = () => {
+const CompanyProfile = () =>
+{
   const params = useParams();
   const { user } = useSelector((state) => state.user);
   const [info, setInfo] = useState(null);
@@ -205,41 +214,47 @@ const CompanyProfile = () => {
   const [openForm, setOpenForm] = useState(false);
 
 
-  const fetchCompany = async()=> {
+  const fetchCompany = async () =>
+  {
     setIsLoading(true);
     let id = null;
 
-    if(params.id && params.id !== undefined)
+    if (params.id && params.id !== undefined)
     {
       id = params?.id;
-    } else {
+    } else
+    {
       id = user?._id;
     }
 
 
-    try{
+    try
+    {
       const res = await apiRequest({
-        url: "/companies/get-company/" + 
-        id,
+        url: "/companies/get-company/" +
+          id,
         method: "GET",
       });
 
       setInfo(res?.data);
       setIsLoading(false);
     }
-    catch (error) {
+    catch (error)
+    {
 
       console.log(error);
       setIsLoading(false);
     };
   }
 
-   //back
-   useEffect(() => {
+  //back
+  useEffect(() =>
+  {
     fetchCompany();
-    window.scrollTo({ top:0, left:0,behaviour: "smooth"});
-  },[]);
-  if (isLoading) {
+    window.scrollTo({ top: 0, left: 0, behaviour: "smooth" });
+  }, []);
+  if (isLoading)
+  {
     return <Loading />;
   }
 
@@ -293,7 +308,8 @@ const CompanyProfile = () => {
         <p>Jobs Posted</p>
 
         <div className='flex flex-wrap gap-3'>
-          {info?.jobPosts?.map((job, index) => {
+          {info?.jobPosts?.map((job, index) =>
+          {
             const data = {
               name: info?.name,
               email: info?.email,

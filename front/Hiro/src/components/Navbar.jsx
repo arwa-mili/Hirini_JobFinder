@@ -110,24 +110,30 @@ const Navbar = () =>
   {
     setIsOpen((prev) => !prev);
   };
+  const getHomePath = () =>
+  {
+    return user?.accountType === "seeker" ? '/find-jobs' : '/upload-job';
+  }
 
   return (
     <>
       <div className='relative bg-[#f7fdfd] z-50'>
         <nav className='container mx-auto flex items-center justify-between p-5'>
           <div>
-            <Link to='/' className='text-blue-600 font-bold text-xl'>
-              Job<span className='text-[#1677cccb]'>Finder</span>
+            <Link to={getHomePath()} className='text-blue-600 font-bold text-xl'>
+              Hiri<span className='text-[#1677cccb]'>Ni</span>
             </Link>
           </div>
 
           <ul className='hidden lg:flex gap-10 text-base'>
             <li>
-              <Link to='/'>Find Job</Link>
+              <Link to={getHomePath()}>{user?.accountType === "seeker" ? "Find Jobs" : "Applications"}</Link>
             </li>
-            <li>
-              <Link to='/companies'>Companies</Link>
-            </li>
+            {user?.accountType === "seeker" && (
+              <li>
+                <Link to='/companies'>Companies</Link>
+              </li>
+            )}
             <li>
               <Link to={user?.accountType === "seeker" ? "/applications" : '/upload-job'}>{user?.accountType === "seeker" ? "Application" : "Upload Job"}</Link>
             </li>

@@ -3,6 +3,7 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import JWT from "jsonwebtoken";
 
+
 const companySchema = new Schema({
   name: {
     type: String,
@@ -20,6 +21,10 @@ const companySchema = new Schema({
     minlength: [6, "Password must be at least"],
     select: true,
   },
+  verified: {
+    type: Boolean,
+    default : false,
+  },
   contact: { type: String },
   location: { type: String },
   about: { type: String },
@@ -28,20 +33,23 @@ const companySchema = new Schema({
 });
 
 // middelwares
-companySchema.pre("save", async function () {
+companySchema.pre("save", async function ()
+{
   if (!this.isModified) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
 //compare password
-companySchema.methods.comparePassword = async function (userPassword) {
+companySchema.methods.comparePassword = async function (userPassword)
+{
   const isMatch = await bcrypt.compare(userPassword, this.password);
   return isMatch;
 };
 
 //JSON WEBTOKEN
-companySchema.methods.createJWT = function () {
+companySchema.methods.createJWT = function ()
+{
   return JWT.sign({ userId: this._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: "1d",
   });

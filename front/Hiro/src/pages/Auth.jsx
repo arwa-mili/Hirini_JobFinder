@@ -4,14 +4,24 @@ import { useLocation } from "react-router-dom";
 import { Office } from "../assets";
 import { SignUp } from "../components";
 
-const Auth = () => {
+const Auth = () =>
+{
   const { user } = useSelector((state) => state.user);
   const [open, setOpen] = useState(true);
   const location = useLocation();
 
   let from = location?.state?.from?.pathname || "/";
 
-  if (user.token) {
+  // Check if the user is a seeker or a company and set the default path accordingly
+  if (user.token)
+  {
+    if (user.accountType === "seeker")
+    {
+      from = "/find-jobs"; // Set the default path for seekers
+    } else
+    {
+      from = "/applicants"; // Set the default path for companies
+    }
     return window.location.replace(from);
   }
   return (

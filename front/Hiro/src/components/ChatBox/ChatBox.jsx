@@ -33,29 +33,28 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) =>
                 // First API call
                 const { data } = await getUser(userId);
                 setUserData(data);
+                console.log("api", data)
+
 
             } catch (error)
             {
-
                 if (error.response)
                 {
                     try
                     {
-
                         const { data: userDataFromSecondApi } = await getUser2(userId);
                         setUserData(userDataFromSecondApi);
-                        //console.log(userDataFromSecondApi);
+                        console.log("second api", userDataFromSecondApi);
                     } catch (secondApiError)
                     {
-                        console.log(secondApiError);
-
+                        console.log("Second API error:", secondApiError);
                     }
                 } else
                 {
-                    console.log(error);
-
+                    console.log("First API error:", error);
                 }
             }
+
         };
 
         if (chat !== null) getUserData();
@@ -140,21 +139,16 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) =>
                             <div className="follower">
                                 <div>
                                     <img
-                                        /*src={
-                                            userData?.profilePicture
-                                                ? process.env.REACT_APP_PUBLIC_FOLDER +
-                                                userData.profilePicture
-                                                : process.env.REACT_APP_PUBLIC_FOLDER +
-                                                "defaultProfile.png"
-                                                
-                                        }*/
-                                        alt="Profile"
-                                        className="followerImage"
+                                        src={
+
+                                            userData?.user?.profileUrl ? userData.user.profileUrl : userData?.data?.profileUrl}
+                                        alt=""
+
                                         style={{ width: "50px", height: "50px" }}
                                     />
                                     <div className="name" style={{ fontSize: "0.9rem" }}>
                                         <span>
-                                            {userData?.firstname} {userData?.lastname}
+                                            {userData?.user?.firstName ? userData.user.firstName : userData?.data?.name} {userData?.user?.lastName}
                                         </span>
                                     </div>
                                 </div>

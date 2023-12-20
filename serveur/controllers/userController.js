@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Users from "../models/userModel.js";
 
+
 export const updateUser = async (req, res, next) =>
 {
   const {
