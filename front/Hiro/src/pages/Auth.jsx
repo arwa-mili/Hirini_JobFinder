@@ -12,15 +12,14 @@ const Auth = () =>
 
   let from = location?.state?.from?.pathname || "/";
 
-  // Check if the user is a seeker or a company and set the default path accordingly
   if (user.token)
   {
     if (user.accountType === "seeker")
     {
-      from = "/find-jobs"; // Set the default path for seekers
+      from = "/find-jobs"; 
     } else
     {
-      from = "/applicants"; // Set the default path for companies
+      from = "/applicants"; 
     }
     return window.location.replace(from);
   }

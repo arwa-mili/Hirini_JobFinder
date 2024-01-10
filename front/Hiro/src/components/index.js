@@ -11,12 +11,15 @@ import CompanyCard from "./CompanyCard";
 import JobTypes from "./JobTypes";
 import ChatBox from "./ChatBox/ChatBox";
 import Conversation from "./Conversation/Conversation";
+import DrawerExample from "./ExampleDrawer";
 export
 {
   Navbar,
   Footer,
   CustomButton,
   TextInput,
+  DrawerExample,
+
   Conversation,
   ChatBox,
   SignUp,

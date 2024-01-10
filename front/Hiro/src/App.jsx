@@ -15,6 +15,7 @@ import
   JobDetail,
   UploadJob,
   UserProfile,
+  OTPInput,
 } from "./pages";
 import { useSelector } from "react-redux";
 
@@ -47,12 +48,14 @@ function App()
         <Route element={<Layout />}>
           <Route
             path='/'
-            element={<Navigate to='/find-jobs' replace={true} />}
+            element={user?.accountType === "seeker" ? <Navigate to='/find-jobs' replace={true} /> : <Navigate to='/applicants' replace={true} />}
           />
           <Route path='/find-jobs' element={<FindJobs />} />
           <Route path='/companies' element={<Companies />} />
           <Route path='/cv-analyser' element={<CvMatch />} />
           <Route path='/chat' element={<Chat />} />
+
+          <Route path='/otp' element={<OTPInput />} />
           <Route
             path={
               user?.accountType === "seeker"

@@ -9,8 +9,14 @@ import JobDetail from "./JobDetail";
 import CvMatch from "./CvMatch";
 import Chat from "./Chat";
 import Applicants from "./Applicants";
+import PdfViewer from "./PdfViewer";
+import DownloadAndView from "./DownloadAndView";
+import OTPInput from "./OTPInput";
 export
 {
+  DownloadAndView,
+  OTPInput,
+  PdfViewer,
   FindJobs,
   AuthPage,
   Companies,

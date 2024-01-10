@@ -115,6 +115,13 @@ const Navbar = () =>
     return user?.accountType === "seeker" ? '/find-jobs' : '/upload-job';
   }
 
+
+  if (!user?.token)
+  {
+    return null;
+  }
+
+
   return (
     <>
       <div className='relative bg-[#f7fdfd] z-50'>

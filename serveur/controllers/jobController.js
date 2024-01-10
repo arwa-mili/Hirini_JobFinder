@@ -290,16 +290,26 @@ export const getJobsByCompanyId = async (req, res, next) =>
     const jobsWithApplicants = jobs.filter((job) => job.applicants.length > 0);
 
     // Transform jobs data to the desired response format
+
     const transformedJobs = jobsWithApplicants.map((job) => ({
+
       jobTitle: job.jobTitle,
-      applicants: job.applicants.map((applicant) => ({
-        candidateName: applicant.candidateName,
-        candidateSurname: applicant.candidateSurname,
-        email: applicant.email,
-        coverLetter: applicant.coverLetter,
-        cv: applicant.pdf,
-        AppStatus: applicant.status,
-      })),
+      jobid: job._id,
+      applicants: job.applicants.map((applicant) =>
+      {
+        // Ensure that 'applicant.pdf' is defined before using it
+        const cvUrl = applicant.pdf ? `/api-v1/jobs/download/${applicant.pdf}` : null;
+
+        return {
+          id: applicant._id,
+          candidateName: applicant.candidateName,
+          candidateSurname: applicant.candidateSurname,
+          email: applicant.email,
+          coverLetter: applicant.coverLetter,
+          cv: cvUrl,
+          AppStatus: applicant.status,
+        };
+      }),
     }));
 
     res.status(200).json({
@@ -312,6 +322,8 @@ export const getJobsByCompanyId = async (req, res, next) =>
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 
 export const getJobById = async (req, res, next) =>
@@ -381,3 +393,139 @@ export const deleteJobPost = async (req, res, next) =>
     res.status(404).json({ message: error.message });
   }
 };
+
+
+
+export const deleteJobApplication = async (req, res, next) =>
+{
+  try
+  {
+    const { jobId, applicantId } = req.params;
+
+    const job = await Jobs.findById(jobId);
+
+    if (!job)
+    {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    const applicantIndex = job.applicants.findIndex((applicant) => applicant._id == applicantId);
+
+    if (applicantIndex === -1)
+    {
+      return res.status(404).json({ error: "Applicant not found" });
+    }
+
+    job.applicants.splice(applicantIndex, 1);
+    await job.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Job application deleted successfully",
+    });
+  } catch (error)
+  {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+export const updateJobApplication = async (req, res, next) =>
+{
+  try
+  {
+    const { jobId, applicantId } = req.params;
+    const { status } = req.body;
+
+    // Populate the 'applicants' field when querying for the job
+    const job = await Jobs.findById(jobId).populate('applicants');
+
+    if (!job)
+    {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    // Find the applicant by ID in the applicants array
+    const applicantIndex = job.applicants.findIndex((applicant) => String(applicant._id) === String(applicantId));
+
+    if (applicantIndex === -1)
+    {
+      return res.status(404).json({ error: 'Applicant not found' });
+    }
+
+    // Get the applicant ID
+    const applicantObjectId = job.applicants[applicantIndex]._id;
+
+
+    const applicantt = await ApplicationsModel.findByIdAndUpdate(applicantObjectId, { status: status });
+    console.log(applicantt)
+ 
+    await job.save();
+
+    await applicantt.save();
+
+
+
+
+
+    res.status(200).json({
+      success: true,
+      status: applicantt.status,
+      message: 'Job application updated successfully',
+    });
+  } catch (error)
+  {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
+
+
+/*
+export const updateJobApplication = async (req, res, next) =>
+{
+  try
+  {
+    const { jobId, applicantId } = req.params;
+    const { status } = req.body;
+
+    // Populate the 'applicants' field when querying for the job
+    const job = await Jobs.findById(jobId).populate('applicants');
+
+    if (!job)
+    {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    // Find the applicant by ID in the applicants array
+    const applicantIndex = job.applicants.findIndex((applicant) => String(applicant._id) === String(applicantId));
+
+    if (applicantIndex === -1)
+    {
+      return res.status(404).json({ error: 'Applicant not found' });
+    }
+
+    // Get the applicant ID
+    const applicantObjectId = job.applicants[applicantIndex]._id;
+
+    // Update the status of the applicant
+    job.applicants[applicantIndex].status = status;
+
+    // Save changes to the job
+    await job.save();
+
+    res.status(200).json({
+      success: true,
+      status: status,
+      message: 'Job application updated successfully',
+    });
+  } catch (error)
+  {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+*/

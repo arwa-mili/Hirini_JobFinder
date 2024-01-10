@@ -2,11 +2,7 @@ import mongoose from "mongoose";
 
 
 
-const StatusEnum = {
-    PENDING: "Pending",
-    APPROVED: "Approved",
-    REJECTED: "Rejected",
-};
+
 const applicationsSchema = new mongoose.Schema(
 
     {
@@ -36,8 +32,8 @@ const applicationsSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: Object.values(StatusEnum),
-            default: StatusEnum.PENDING,
+
+
 
         }
     },
@@ -45,25 +41,6 @@ const applicationsSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
-
-class Status
-{
-    static get PENDING()
-    {
-        return StatusEnum.PENDING;
-    }
-
-    static get APPROVED()
-    {
-        return StatusEnum.APPROVED;
-    }
-
-    static get REJECTED()
-    {
-        return StatusEnum.REJECTED;
-    }
-}
-
 
 const ApplicationsModel = mongoose.model("Applications", applicationsSchema);
 export default ApplicationsModel;
